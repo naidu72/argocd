@@ -4,6 +4,6 @@ resources:
   - deployment.yaml
   - service.yaml
 images:
-  - name: gcr.io/heptio-images/ks-guestbook-demo
+  - name: gcr.io/google-samples/gb-frontend
     newName: nginx
     newTag: alpine
