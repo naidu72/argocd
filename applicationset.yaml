@@ -19,7 +19,7 @@ spec:
     spec:
       project: default
       source:
-        repoURL: https://github.com/naidu72/homelab-gitops.git
+        repoURL: https://github.com/naidu72/argocd.git
         targetRevision: HEAD
         path: 'guestbook/{{arch}}'
       destination:
