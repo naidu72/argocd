@@ -1,0 +1,33 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: guestbook
+  namespace: argocd
+spec:
+  generators:
+    - list:
+        elements:
+          - cluster: in-cluster
+            url: https://kubernetes.default.svc
+            path: guestbook
+          - cluster: pi-k8s
+            url: https://192.168.0.151:6443
+            path: guestbook-arm64
+  template:
+    metadata:
+      name: 'guestbook-{{cluster}}'
+    spec:
+      project: default
+      source:
+        repoURL: https://github.com/argoproj/argocd-example-apps.git
+        targetRevision: HEAD
+        path: '{{path}}'
+      destination:
+        server: '{{url}}'
+        namespace: guestbook
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true

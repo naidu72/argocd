@@ -1,0 +1,18 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: guestbook-app
+  namespace: argocd # This is where the Argo CD controller lives
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/argoproj/argocd-example-apps.git
+    targetRevision: HEAD
+    path: helm-guestbook
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: guestbook # Target namespace for the app
+  syncPolicy:
+    automated:
+      prune: true # Deletes resources from K8s if they are removed from Git
+      selfHeal: true # Automatically corrects drift
