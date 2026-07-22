@@ -1,0 +1,38 @@
+---
+# ArgoCD Helm chart values — chart version is pinned in platform/argocd.yaml (Application)
+# or passed via --version on the break-glass `helm upgrade` path.
+#
+# NOTE: global.image.tag is deliberately NOT set. The chart's tested appVersion
+# is what you want; pinning the image separately lets templates and binary diverge.
+
+configs:
+  params:
+    # Terminate TLS at the ingress/tunnel instead of in argocd-server.
+    # Replaces the deprecated `server.extraArgs: [--insecure]` form.
+    server.insecure: true
+
+  cm:
+    # How often each Application re-checks Git when no webhook fires.
+    timeout.reconciliation: 180s
+
+    # Track managed resources by annotation, not by the app.kubernetes.io/instance
+    # label. The label collides with Helm's own labels and is capped at 63 chars.
+    # Set this BEFORE you have many apps — changing it later forces re-adoption.
+    application.resourceTrackingMethod: annotation
+
+# Metrics endpoints for Prometheus (wired up in the Ops phase).
+controller:
+  metrics:
+    enabled: true
+
+server:
+  metrics:
+    enabled: true
+
+repoServer:
+  metrics:
+    enabled: true
+
+applicationSet:
+  metrics:
+    enabled: true
